@@ -278,6 +278,15 @@ class AIG(object):
         return 1
 
     def create_pi(self, name=None):
+        """
+        Create primary input.
+
+        Parameters
+        ----------
+        name: str or int, optional
+            Assign custom name to node. The corresponding id can be obtained
+            by `aig.get_id_by_name`.
+        """
         pi_id = len(self._pis)
         n = _Node.make_pi(pi_id)
         fn = len(self._nodes) << 1
@@ -353,6 +362,9 @@ class AIG(object):
         self._pis.append(buf)
 
     def create_po(self, f=0, name=None, po_type=OUTPUT):
+        """
+        Create primary output.
+        """
         po_id = len(self._pos)
         self._pos.append((f, po_type))
 
@@ -675,6 +687,9 @@ class AIG(object):
         return self.create_or(self.negate(left), right)
 
     def create_ite(self, f_if, f_then, f_else):
+        """
+        Create if-then-else.
+        """
         return self.create_or(
             self.create_and(f_if, f_then), self.create_and(self.negate(f_if), f_else)
         )
