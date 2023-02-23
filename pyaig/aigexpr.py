@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-from past.builtins import xrange
-
 from .aig import AIG
 
 
@@ -139,7 +137,7 @@ if __name__ == "__main__":
 
     jpos = [
         aig.create_po(l.get_f(), "JUSTICE_%d" % i, po_type=AIG.JUSTICE)
-        for i in xrange(5)
+        for i in range(5)
     ]
     aig.create_justice(jpos)
 

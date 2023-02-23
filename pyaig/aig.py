@@ -3,7 +3,6 @@
 # Author: Baruch Sterin <sterin@berkeley.edu>
 # Simple Python AIG package
 
-from past.builtins import xrange
 from future.utils import iteritems
 
 import itertools
@@ -726,7 +725,7 @@ class AIG(object):
     # Object access as iterators (use list() to get a copy)
 
     def construction_order(self):
-        return (i << 1 for i in xrange(1, len(self._nodes)))
+        return (i << 1 for i in range(1, len(self._nodes)))
 
     def construction_order_deref(self):
         return ((f, self.deref(f)) for f in self.construction_order())
