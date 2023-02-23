@@ -15,10 +15,10 @@ def filter_lines(f):
         if not line:
             continue
 
-        elif line.startswith(b'u'):
+        elif line.startswith(b"u"):
             continue
 
-        elif line.startswith(b'c'):
+        elif line.startswith(b"c"):
             continue
 
         yield line
@@ -26,7 +26,7 @@ def filter_lines(f):
 
 def read_cex(f):
 
-    V = { b'0': 0, b'1':1, 0:0, 1:0, '0':0, '1':1, ord('0'):0, ord('1'):1 }
+    V = {b"0": 0, b"1": 1, 0: 0, 1: 0, "0": 0, "1": 1, ord("0"): 0, ord("1"): 1}
 
     result = None
     prop = None
@@ -42,7 +42,7 @@ def read_cex(f):
         elif prop is None:
             prop = line
 
-        elif line=='.':
+        elif line == ".":
             break
 
         elif latch_values is None:
@@ -55,7 +55,6 @@ def read_cex(f):
 
 
 class pyaig_values(object):
-
     def __init__(self, aig):
         self.m = {aig.get_const0(): 0}
 
@@ -79,7 +78,7 @@ def simulate(aig, latch_values, pi_values):
 
     for l, v in zip(aig.get_latches(), latch_values):
         values[l] = v
-        
+
     for k in xrange(len(pi_values)):
 
         for f, v in zip(aig.get_pis(), pi_values[k]):
@@ -88,7 +87,7 @@ def simulate(aig, latch_values, pi_values):
         for f in aig.get_and_gates():
             values[f] = values[aig.get_and_left(f)] & values[aig.get_and_right(f)]
 
-        simulation.append( values )
+        simulation.append(values)
 
         new_values = pyaig_values(aig)
 
@@ -96,27 +95,27 @@ def simulate(aig, latch_values, pi_values):
             new_values[l] = values[aig.get_next(l)]
 
         values = new_values
-        
+
     return simulation
 
 
-def print_cex( aig, simulation, symbols):
+def print_cex(aig, simulation, symbols):
 
-    maxlen = +max( len(sym) for sym in symbols )
-    
+    maxlen = +max(len(sym) for sym in symbols)
+
     for n, f in sorted(iteritems(symbols)):
-        
-        print("%-*s:"%(maxlen, n), end='')
+
+        print("%-*s:" % (maxlen, n), end="")
 
         for i in xrange(len(simulation)):
             v = simulation[i][f]
-            v = str(v) if 0 <= v <= 1 else '?'
-            print(v, end='')
+            v = str(v) if 0 <= v <= 1 else "?"
+            print(v, end="")
 
         print()
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     from . import primitives
 
@@ -150,6 +149,7 @@ if __name__=="__main__":
     """
 
     import io
+
     latch_values, pi_values = read_cex(io.BytesIO(CEX))
 
     print(latch_values, pi_values)
@@ -157,14 +157,14 @@ if __name__=="__main__":
     # set names
 
     for po_id, po_fanin, po_type in aig.get_pos():
-        aig.set_name(aig.get_po_fanin(po_id), 'L%d'%po_id)
+        aig.set_name(aig.get_po_fanin(po_id), "L%d" % po_id)
 
     # simulate
 
     simulation = simulate(aig, latch_values, pi_values)
-    
-    symbols = { n:f for f, n in aig.iter_names() }
-    symbols.update( (n,f) for _, f, n in aig.iter_po_names() )
+
+    symbols = {n: f for f, n in aig.iter_names()}
+    symbols.update((n, f) for _, f, n in aig.iter_po_names())
 
     # print CEX
 
