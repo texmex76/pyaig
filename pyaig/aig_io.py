@@ -78,12 +78,18 @@ class _aiger_writer(object):
         self._next += 2
 
     def write_input_name(self, i, name):
+        if isinstance(name, int):
+            name = str(name)
         self._bytes.extend(b"i%d %s\n" % (i, self._encode_str(name)))
 
     def write_latch_name(self, i, name):
+        if isinstance(name, int):
+            name = str(name)
         self._bytes.extend(b"l%d %s\n" % (i, self._encode_str(name)))
 
     def write_po_name(self, po_type, i, name):
+        if isinstance(name, int):
+            name = str(name)
         self._bytes.extend(b"%s%d %s\n" % (po_type, i, self._encode_str(name)))
 
     def _encode(self, x):
